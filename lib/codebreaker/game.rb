@@ -1,51 +1,36 @@
 # frozen_string_literal: true
 
-require 'difficulty'
-require 'secret_code'
-require 'user'
-require 'user_code'
-require 'statistics'
-
 module Codebreaker
   class Game
     def initialize(name, difficult)
-      difficulty_hash = Difficulty.new(difficult)
-      @difficulty = difficult
-      @name = name
-      @attemts_total = difficulty_hash[:attempts]
-      @attemts_used = 0
-      @hints_total = difficulty_hash[:hints]
-      @hints_used = []
-      @secret_code = SecretCodeGenerator.new
-      @answer = '  '
+      @user = User.new(name)
+      @difficulty_hash = Settings::DIFFICULTY[difficult.downcase.to_sym]
+      @secret_code = Array.new(Settings::CODE_LENGTH) { rand(1..6) }.join
     end
 
     def guess(user_code)
-      @attemts_used += 1 # if state == :in_progress
-      @answer = UserCode.validate(user_code).to_s.chars.each_with_index.map do |digit, i|
-        if @secret_code[i] == digit
-          '+'
-        else
-          @secret_code.include?(digit) ? '-' : ' '
-        end
-      end.join
+      raise NoAttemptsLeftError if @user.attempts_used == @difficulty_hash[:attempts]
+
+      code = UserCode.new(user_code)
+      @user.attempts_used += 1
+      answer = code.guess(@secret_code)
+      if answer.length == Settings::CODE_LENGTH && answer.chars.all?(Settings::PLUS)
+        answer << Settings::WIN
+      elsif @user.attempts_used == @difficulty_hash[:attempts]
+        answer << Settings::LOSE
+      else answer
+      end
     end
 
     def hint
-      raise StandardError, 'no hints left' if @hints_used.count == @hints_total
+      raise NoHintsLeft if @user.hints_used.count == @difficulty_hash[:hints]
 
       digit = @secret_code[rand(0..3)]
-      @hints_used.include?(digit) ? hint : (@hints_used << digit).last
-    end
-
-    def state
-      return :win if @answer.chars.all?('+')
-
-      @attemts_used == @attemts_total ? (return :lose) : (return :in_progress)
+      @user.hints_used.include?(digit) ? hint : (@user.hints_used << digit).last
     end
 
     def save
-      Statistics.save(self)
+      Statistics.new(@user, Settings::DIFFICULTY.key(@difficulty_hash)).save
     end
 
     def statistics

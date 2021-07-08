@@ -2,16 +2,20 @@
 
 module Codebreaker
   class User
-    attr_accessor :name
+    attr_reader :name
+    attr_accessor :attempts_used, :hints_used
 
     def initialize(name)
-      @name = name if validate(name)
+      validate(name)
+      @name = name
+      @attempts_used = 0
+      @hints_used = []
     end
 
     private
 
     def validate(name)
-      /^\w{3,20}$/.match?(name) ? true : (raise TypeError, 'wrong format of input')
+      /^\w{3,20}$/.match?(name) || (raise WrongNameInputError)
     end
   end
 end
