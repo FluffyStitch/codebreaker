@@ -9,7 +9,7 @@ module Codebreaker
       validate(name)
       @name = name
       @attempts_used = 0
-      @hints_used = []
+      @hints_used = 0
     end
 
     private

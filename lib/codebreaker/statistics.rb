@@ -2,15 +2,11 @@
 
 module Codebreaker
   class Statistics
-    attr_reader :name, :difficulty, :attempts_total, :attempts_used, :hints_total, :hints_used, :date
+    attr_reader :user, :difficulty, :attempts_total, :hints_total, :date
 
-    def initialize(user, difficulty, date = Date.now)
-      @name = user.name
-      @difficulty = difficulty.to_s.capitalize
-      @attempts_total = Settings::DIFFICULTY[difficulty][:attempts]
-      @attempts_used = user.attempts_used
-      @hints_total = Settings::DIFFICULTY[difficulty][:hints]
-      @hints_used = user.hints_used.count
+    def initialize(user, difficulty, date = Date.today)
+      @user = user
+      @difficulty = difficulty
       @date = date
     end
 
@@ -39,7 +35,9 @@ module Codebreaker
 
       def sort_difficulty(statistics)
         statistics.sort_by do |statistic|
-          [statistic.attempts_total, statistic.hints_total, statistic.attempts_used, statistic.hints_used]
+          [Settings::DIFFICULTY[statistic.difficulty.to_sym][:attempts],
+           Settings::DIFFICULTY[statistic.difficulty.to_sym][:hints],
+           statistic.user.attempts_used, statistic.user.hints_used]
         end
       end
     end

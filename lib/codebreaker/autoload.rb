@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require 'date'
 require 'yaml'
 
+require_relative 'code_comparator'
 require_relative 'constants'
 require_relative 'game'
 require_relative 'statistics'
-require_relative 'user_code'
 require_relative 'user'
 require_relative 'version'
 require_relative 'errors/no_attempts_left_error'

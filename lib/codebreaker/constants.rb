@@ -9,7 +9,6 @@ module Codebreaker
     }.freeze
     PLUS = '+'
     MINUS = '-'
-    SPACE = ' '
     WIN = ' (win)'
     LOSE = ' (lose)'
     CODE_LENGTH = 4

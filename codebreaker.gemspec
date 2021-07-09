@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.add_development_dependency 'ffaker', '~> 2.18.0'
   spec.add_development_dependency 'lefthook', '~> 0.7.2'
   spec.add_development_dependency 'rspec', '~> 3.10.0'
   spec.add_development_dependency 'rubocop', '~> 1.12.1'
