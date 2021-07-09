@@ -8,19 +8,17 @@ module Codebreaker
     def initialize(name)
       validate(name)
       @name = name
-      @attempts_used = 0
-      @hints_used = 0
+      start_new_game
     end
 
-    def restart
-      @attempts_used = 0
-      @hints_used = 0
+    def start_new_game
+      @attempts_used = @hints_used = 0
     end
 
     private
 
     def validate(name)
-      /^\w{3,20}$/.match?(name) || (raise WrongNameInputError)
+      Settings::USER_REGEX.match?(name) || (raise WrongNameInputError)
     end
   end
 end

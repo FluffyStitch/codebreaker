@@ -13,6 +13,10 @@ module Codebreaker
         game.guess(user_code)
         expect(game.user.attempts_used).to eq(1)
       end
+
+      it 'game in progress status' do
+        expect(game.guess(user_code)[:status]).to eq(Settings::IN_PROGRES)
+      end
     end
 
     context 'when user takes a hint' do
@@ -42,14 +46,14 @@ module Codebreaker
       let(:user_code) { game.secret_code.join.to_s }
 
       it 'input win message' do
-        expect(game.guess(user_code)).to include(Settings::WIN)
+        expect(game.guess(user_code)[:status]).to eq(Settings::WIN)
       end
     end
 
     context 'when user lose' do
       it 'input lose message' do
         (Settings::DIFFICULTY[difficulty.to_sym][:attempts] - 1).times { game.guess(user_code) }
-        expect(game.guess(user_code)).to include(Settings::LOSE)
+        expect(game.guess(user_code)[:status]).to eq(Settings::LOSE)
       end
     end
 

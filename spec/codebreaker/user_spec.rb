@@ -40,7 +40,7 @@ module Codebreaker
       before do
         user.attempts_used += 1
         user.hints_used += 1
-        user.restart
+        user.start_new_game
       end
 
       it 'has 0 attempts used' do

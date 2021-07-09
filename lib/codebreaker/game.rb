@@ -6,32 +6,33 @@ module Codebreaker
 
     def initialize(name, difficult)
       @user = User.new(name)
-      @difficulty_hash = Settings::DIFFICULTY[difficult.downcase.to_sym]
+      @difficulty_attributes = Settings::DIFFICULTY[difficult.downcase.to_sym]
       generate_code
     end
 
     def guess(user_code)
-      raise NoAttemptsLeftError if @user.attempts_used == @difficulty_hash[:attempts]
+      raise NoAttemptsLeftError if @user.attempts_used == @difficulty_attributes[:attempts]
 
-      @user.attempts_used += 1
       answer = comparator.guess(user_code)
-      if answer.length == Settings::CODE_LENGTH && answer.chars.all?(Settings::PLUS)
-        answer << Settings::WIN
-      elsif @user.attempts_used == @difficulty_hash[:attempts]
-        answer << Settings::LOSE
-      else answer
-      end
+      @user.attempts_used += 1
+      status = if answer == Settings::PLUS * Settings::CODE_LENGTH
+                 Settings::WIN
+               elsif @user.attempts_used == @difficulty_attributes[:attempts]
+                 Settings::LOSE
+               else Settings::IN_PROGRES
+               end
+      { answer: answer, status: status }
     end
 
     def hint
-      raise NoHintsLeftError if @user.hints_used == @difficulty_hash[:hints]
+      raise NoHintsLeftError if @user.hints_used == @difficulty_attributes[:hints]
 
       @user.hints_used += 1
-      @hints.delete_at(@hints.index(@hints.sample))
+      @hints.pop
     end
 
     def save
-      Statistics.new(@user, Settings::DIFFICULTY.key(@difficulty_hash).to_s).save
+      Statistics.new(@user, Settings::DIFFICULTY.key(@difficulty_attributes).to_s).save
     end
 
     def statistics
@@ -39,7 +40,7 @@ module Codebreaker
     end
 
     def restart
-      @user.restart
+      @user.start_new_game
       generate_code
     end
 
@@ -51,7 +52,7 @@ module Codebreaker
 
     def generate_code
       @secret_code = Array.new(Settings::CODE_LENGTH) { rand(1..6) }
-      @hints = @secret_code.clone
+      @hints = @secret_code.clone.shuffle
     end
   end
 end

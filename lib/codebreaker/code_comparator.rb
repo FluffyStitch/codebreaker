@@ -20,7 +20,7 @@ module Codebreaker
     private
 
     def validate(code)
-      /^[1-6]{4}$/.match?(code) || (raise WrongCodeInputError)
+      Settings::CODE_REGEX.match?(code) || (raise WrongCodeInputError)
     end
   end
 end
