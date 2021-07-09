@@ -7,8 +7,7 @@ module Codebreaker
     def initialize(name, difficult)
       @user = User.new(name)
       @difficulty_hash = Settings::DIFFICULTY[difficult.downcase.to_sym]
-      @secret_code = Array.new(Settings::CODE_LENGTH) { rand(1..6) }
-      @hints = @secret_code.clone
+      generate_code
     end
 
     def guess(user_code)
@@ -39,10 +38,20 @@ module Codebreaker
       Statistics.load
     end
 
+    def restart
+      @user.restart
+      generate_code
+    end
+
     private
 
     def comparator
       @comparator ||= CodeComparator.new(@secret_code)
+    end
+
+    def generate_code
+      @secret_code = Array.new(Settings::CODE_LENGTH) { rand(1..6) }
+      @hints = @secret_code.clone
     end
   end
 end

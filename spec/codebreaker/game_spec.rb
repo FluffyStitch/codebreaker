@@ -52,5 +52,20 @@ module Codebreaker
         expect(game.guess(user_code)).to include(Settings::LOSE)
       end
     end
+
+    context 'when user data restart' do
+      before { game.restart }
+
+      let(:old_user) { game.user }
+      let(:old_secret_code) { game.secret_code.join.to_s }
+
+      it 'has same user' do
+        expect(game.user).to eq(old_user)
+      end
+
+      it 'has new secret code' do
+        expect(game.secret_code).not_to eq(old_secret_code)
+      end
+    end
   end
 end

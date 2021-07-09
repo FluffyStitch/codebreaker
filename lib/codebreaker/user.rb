@@ -12,6 +12,11 @@ module Codebreaker
       @hints_used = 0
     end
 
+    def restart
+      @attempts_used = 0
+      @hints_used = 0
+    end
+
     private
 
     def validate(name)

@@ -5,6 +5,8 @@ module Codebreaker
     subject(:user) { described_class.new(name) }
 
     let(:name) { FFaker::Name.first_name }
+    let(:attempts_used) { 0 }
+    let(:hints_used) { 0 }
 
     describe '.initialize' do
       it 'initializes' do
@@ -13,9 +15,6 @@ module Codebreaker
     end
 
     context 'when name is valid' do
-      let(:attempts_used) { 0 }
-      let(:hints_used) { 0 }
-
       it 'has name' do
         expect(user.name).to eq(name)
       end
@@ -34,6 +33,22 @@ module Codebreaker
 
       it 'raise WrongNameInputError' do
         expect { user }.to raise_error(WrongNameInputError)
+      end
+    end
+
+    context 'when user data restart' do
+      before do
+        user.attempts_used += 1
+        user.hints_used += 1
+        user.restart
+      end
+
+      it 'has 0 attempts used' do
+        expect(user.attempts_used).to eq(attempts_used)
+      end
+
+      it 'has 0 hints used' do
+        expect(user.hints_used).to eq(hints_used)
       end
     end
   end
