@@ -2,11 +2,19 @@
 
 module Codebreaker
   RSpec.describe Game do
-    subject(:game) { described_class.new(name, difficulty) }
+    subject(:game) { described_class.new(user, difficulty) }
 
-    let(:name) { FFaker::Name.first_name }
+    let(:user) { User.new(FFaker::Name.first_name) }
     let(:difficulty) { Settings::DIFFICULTY.keys.sample.to_s }
     let(:user_code) { Array.new(Settings::CODE_LENGTH) { rand(1..6) }.join.to_s }
+
+    context 'when user choose unreal difficulty' do
+      let(:difficulty) { FFaker::AnimalUS.common_name }
+
+      it 'raise NoThisDifficultyError' do
+        expect { game }.to raise_error(NoThisDifficultyError)
+      end
+    end
 
     context 'when user takes a guess' do
       it 'user has 1 used attempts' do

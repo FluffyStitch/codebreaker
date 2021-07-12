@@ -4,9 +4,9 @@ module Codebreaker
   class Game
     attr_reader :user, :secret_code
 
-    def initialize(name, difficult)
-      @user = User.new(name)
-      @difficulty_attributes = Settings::DIFFICULTY[difficult.downcase.to_sym]
+    def initialize(user, difficulty)
+      @user = user
+      @difficulty_attributes = Settings::DIFFICULTY[difficulty.downcase.to_sym] || (raise NoThisDifficultyError)
       generate_code
     end
 
