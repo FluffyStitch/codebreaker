@@ -31,15 +31,12 @@ module Codebreaker
 
     context 'when params is valid' do
       let(:comparator_results) { [] }
-      let(:results) do
-        results = []
-        codes_hash.each { |codes| results << codes[:result] }
-        results
-      end
+      let(:results) { codes_hash.map { |codes| codes[:result] } }
 
       it 'success' do
-        codes_hash.each { |codes| comparator_results << described_class.new(codes[:secret_code]).guess(codes[:guess]) }
-        expect(comparator_results).to eq(results)
+        codes_hash.each do |codes|
+          expect(described_class.new(codes[:secret_code]).guess(codes[:guess])).to eq(codes[:result])
+        end
       end
     end
   end

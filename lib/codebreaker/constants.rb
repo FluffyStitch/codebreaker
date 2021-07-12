@@ -11,7 +11,7 @@ module Codebreaker
     MINUS = '-'
     WIN = :win
     LOSE = :lose
-    IN_PROGRES = :in_progress
+    IN_PROGRESS = :in_progress
     CODE_LENGTH = 4
     DIR = 'statistics'
     FILE = 'statistics.yml'

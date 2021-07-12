@@ -8,12 +8,6 @@ module Codebreaker
     let(:attempts_used) { 0 }
     let(:hints_used) { 0 }
 
-    describe '.initialize' do
-      it 'initializes' do
-        expect(user).to be_a(described_class)
-      end
-    end
-
     context 'when name is valid' do
       it 'has name' do
         expect(user.name).to eq(name)
@@ -40,15 +34,14 @@ module Codebreaker
       before do
         user.attempts_used += 1
         user.hints_used += 1
-        user.start_new_game
       end
 
       it 'has 0 attempts used' do
-        expect(user.attempts_used).to eq(attempts_used)
+        expect { user.start_new_game }.to change(user, :attempts_used).from(1).to(attempts_used)
       end
 
       it 'has 0 hints used' do
-        expect(user.hints_used).to eq(hints_used)
+        expect { user.start_new_game }.to change(user, :hints_used).from(1).to(hints_used)
       end
     end
   end

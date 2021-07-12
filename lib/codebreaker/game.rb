@@ -19,7 +19,7 @@ module Codebreaker
                  Settings::WIN
                elsif @user.attempts_used == @difficulty_attributes[:attempts]
                  Settings::LOSE
-               else Settings::IN_PROGRES
+               else Settings::IN_PROGRESS
                end
       { answer: answer, status: status }
     end

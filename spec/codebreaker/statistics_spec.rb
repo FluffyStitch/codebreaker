@@ -15,19 +15,21 @@ module Codebreaker
     let(:date) { Date.today }
 
     context 'when save game' do
+      let(:file) { YAML.load_file(File.join(Settings::DIR, Settings::FILE)) }
+
       it 'saved user' do
         statistics.save
-        expect(YAML.load_file(File.join(Settings::DIR, Settings::FILE)).first.user.name).to eq(user.name)
+        expect(file.first.user.name).to eq(user.name)
       end
 
       it 'saved difficulty' do
         statistics.save
-        expect(YAML.load_file(File.join(Settings::DIR, Settings::FILE)).first.difficulty).to eq(difficulty)
+        expect(file.first.difficulty).to eq(difficulty)
       end
 
       it 'saved date' do
         statistics.save
-        expect(YAML.load_file(File.join(Settings::DIR, Settings::FILE)).first.date).to eq(date)
+        expect(file.first.date).to eq(date)
       end
     end
 
