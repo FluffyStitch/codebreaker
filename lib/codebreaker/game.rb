@@ -13,7 +13,7 @@ module Codebreaker
     def guess(user_code)
       raise NoAttemptsLeftError if @user.attempts_used == @difficulty_attributes[:attempts]
 
-      answer = comparator.guess(user_code)
+      answer = @comparator.guess(user_code)
       @user.attempts_used += 1
       status = if answer == Settings::PLUS * Settings::CODE_LENGTH
                  Settings::WIN
@@ -46,13 +46,10 @@ module Codebreaker
 
     private
 
-    def comparator
-      @comparator ||= CodeComparator.new(@secret_code)
-    end
-
     def generate_code
       @secret_code = Array.new(Settings::CODE_LENGTH) { rand(1..6) }
       @hints = @secret_code.clone.shuffle
+      @comparator = CodeComparator.new(@secret_code)
     end
   end
 end
