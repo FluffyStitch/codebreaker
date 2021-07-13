@@ -1,6 +1,5 @@
-require "codebreaker/version"
+# frozen_string_literal: true
 
-module Codebreaker
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require_relative 'codebreaker/autoload'
+
+module Codebreaker; end

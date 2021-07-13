@@ -1,0 +1,36 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.0
+
+jobs:
+  lintering:
+    docker:
+      - image: cimg/ruby:2.7.2-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - run:
+          name: lefthook
+          command: bundle exec lefthook run pre-commit
+
+  testing:
+    docker:
+      - image: cimg/ruby:2.7.2-node
+    environment:
+      RAILS_ENV: test
+    steps:
+      - checkout
+      - ruby/install-deps
+      - run:
+          name: run specs
+          command: bundle exec rspec
+
+workflows:
+  version: 2
+  lint_and_test:
+    jobs:
+      - lintering
+      - testing:
+          requires:
+            - lintering
